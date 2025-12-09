@@ -1,4 +1,4 @@
-//Make sure to run "npm install recharts"
+// Make sure to run "npm install recharts"
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Shield, Activity, AlertTriangle, CheckCircle } from 'lucide-react';
@@ -40,8 +40,7 @@ const COLORS = {
   },
 };
 
-//Main part in Analytics
-
+// Main part in Analytics
 const AnalyticsView = ({ data }) => {
   // Responsive hook
   const { isMobile, isTablet } = useResponsive();
@@ -121,7 +120,7 @@ const AnalyticsView = ({ data }) => {
     return { totalTransactions, fraudRate, fraudLoss, legitimateVolume };
   }, [backendData, data]);
 
-  //Transaction Volume Chart - Backend data or local calculation
+  // Transaction Volume Chart - Backend data or local calculation
   const volumeByDayData = useMemo(() => {
     // Try to use backend data first
     if (backendData && backendData.volume_by_day_data) {
@@ -146,7 +145,7 @@ const AnalyticsView = ({ data }) => {
       ); // Sort by day
   }, [backendData, data]);
 
-  //Channel Distribution - Backend data or local calculation
+  // Channel Distribution - Backend data or local calculation
   const channelData = useMemo(() => {
     // Try to use backend data first
     if (backendData && backendData.channel_data) {
@@ -172,7 +171,7 @@ const AnalyticsView = ({ data }) => {
     ];
   }, [backendData, data]);
 
-  //Activity Heatmaps - Backend data or local calculation
+  // Activity Heatmaps - Backend data or local calculation
   const activityData = useMemo(() => {
     // Try to use backend data first
     if (backendData && backendData.activity_data) {
@@ -238,15 +237,18 @@ const AnalyticsView = ({ data }) => {
   }, [backendData]);
 
   // Responsive chart configurations
-  const chartConfig = useMemo(() => ({
-    margin: isMobile 
-      ? { top: 5, right: 5, left: -20, bottom: 5 }
-      : { top: 5, right: 20, left: -20, bottom: 5 },
-    fontSize: isMobile ? 10 : 12,
-    legendLayout: isMobile ? 'horizontal' : 'vertical',
-    pieOuterRadius: isMobile ? 70 : 100,
-    chartHeight: isMobile ? 250 : 300,
-  }), [isMobile]);
+  const chartConfig = useMemo(
+    () => ({
+      margin: isMobile
+        ? { top: 5, right: 5, left: -20, bottom: 5 }
+        : { top: 5, right: 20, left: -20, bottom: 5 },
+      fontSize: isMobile ? 10 : 12,
+      legendLayout: isMobile ? 'horizontal' : 'vertical',
+      pieOuterRadius: isMobile ? 70 : 100,
+      chartHeight: isMobile ? 250 : 300,
+    }),
+    [isMobile]
+  );
 
   // For formatting currency on chart hover
   const formatCurrencyTooltip = (value) => {
@@ -266,7 +268,7 @@ const AnalyticsView = ({ data }) => {
   // Loading state
   if (loading) {
     return (
-      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="animate-pulse">
           <div className="h-6 md:h-8 bg-gray-200 rounded w-1/3 mb-4 md:mb-6"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -286,7 +288,7 @@ const AnalyticsView = ({ data }) => {
   // Error state with fallback notice
   if (error && !backendData) {
     return (
-      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 md:p-4 mb-3 md:mb-4">
           <p className="text-amber-800 text-xs md:text-sm">
             <strong>Backend unavailable:</strong> Showing fallback data. {error}
@@ -304,7 +306,7 @@ const AnalyticsView = ({ data }) => {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
       <h2
         className="text-xl md:text-2xl font-semibold mb-3 md:mb-4"
         style={{ color: COLORS.grayTitle }}
@@ -335,10 +337,12 @@ const AnalyticsView = ({ data }) => {
           },
           {
             title: 'Legitimate Volume',
-            value: `₹${Number(analyticsMetrics.legitimateVolume || 0).toLocaleString(
-              'en-IN',
-              { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-            )}`,
+            value: `₹${Number(
+              analyticsMetrics.legitimateVolume || 0
+            ).toLocaleString('en-IN', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`,
             icon: CheckCircle,
             color: COLORS.success,
             iconColor: COLORS.success,
@@ -410,39 +414,38 @@ const AnalyticsView = ({ data }) => {
           >
             Transaction Volume Over Time
           </h3>
-          <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
-            <BarChart
-              data={volumeByDayData}
-              margin={chartConfig.margin}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={COLORS.grayBorder}
-              />
-              <XAxis
-                dataKey="name"
-                fontSize={chartConfig.fontSize}
-                stroke={COLORS.grayText}
-                angle={isMobile ? -45 : 0}
-                textAnchor={isMobile ? 'end' : 'middle'}
-                height={isMobile ? 60 : 30}
-              />
-              <YAxis
-                fontSize={chartConfig.fontSize}
-                stroke={COLORS.grayText}
-                tickFormatter={(val) => `₹${val / 1000}k`}
-              />
-              <Tooltip 
-                formatter={(value) => formatCurrencyTooltip(value)}
-                contentStyle={{ fontSize: chartConfig.fontSize }}
-              />
-              <Bar
-                dataKey="volume"
-                fill={COLORS.primary}
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="w-full h-full">
+            <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
+              <BarChart data={volumeByDayData} margin={chartConfig.margin}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={COLORS.grayBorder}
+                />
+                <XAxis
+                  dataKey="name"
+                  fontSize={chartConfig.fontSize}
+                  stroke={COLORS.grayText}
+                  angle={isMobile ? -45 : 0}
+                  textAnchor={isMobile ? 'end' : 'middle'}
+                  height={isMobile ? 60 : 30}
+                />
+                <YAxis
+                  fontSize={chartConfig.fontSize}
+                  stroke={COLORS.grayText}
+                  tickFormatter={(val) => `₹${val / 1000}k`}
+                />
+                <Tooltip
+                  formatter={(value) => formatCurrencyTooltip(value)}
+                  contentStyle={{ fontSize: chartConfig.fontSize }}
+                />
+                <Bar
+                  dataKey="volume"
+                  fill={COLORS.primary}
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Channel Distribution section */}
@@ -459,38 +462,43 @@ const AnalyticsView = ({ data }) => {
           >
             Channel Distribution
           </h3>
-          <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
-            <PieChart>
-              <Pie
-                data={channelData}
-                cx="50%"
-                cy="50%"
-                outerRadius={chartConfig.pieOuterRadius}
-                fill="#8884d8"
-                dataKey="value"
-                label={isMobile ? false : ({ name, percent }) =>
-                  `${name} ${(percent * 100).toFixed(0)}%`
-                }
-              >
-                {channelData.map((entry) => (
-                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value, name) => [
-                  `${value.toLocaleString()} txns`,
-                  name,
-                ]}
-                contentStyle={{ fontSize: chartConfig.fontSize }}
-              />
-              <Legend 
-                layout={chartConfig.legendLayout}
-                verticalAlign={isMobile ? 'bottom' : 'middle'}
-                align={isMobile ? 'center' : 'right'}
-                wrapperStyle={{ fontSize: chartConfig.fontSize }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="w-full h-full">
+            <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
+              <PieChart>
+                <Pie
+                  data={channelData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={chartConfig.pieOuterRadius}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={
+                    isMobile
+                      ? false
+                      : ({ name, percent }) =>
+                          `${name} ${(percent * 100).toFixed(0)}%`
+                  }
+                >
+                  {channelData.map((entry) => (
+                    <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value, name) => [
+                    `${value.toLocaleString()} txns`,
+                    name,
+                  ]}
+                  contentStyle={{ fontSize: chartConfig.fontSize }}
+                />
+                <Legend
+                  layout={chartConfig.legendLayout}
+                  verticalAlign={isMobile ? 'bottom' : 'middle'}
+                  align={isMobile ? 'center' : 'right'}
+                  wrapperStyle={{ fontSize: chartConfig.fontSize }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
@@ -510,59 +518,62 @@ const AnalyticsView = ({ data }) => {
         </h3>
 
         {featureImportanceData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
-            <BarChart
-              data={featureImportanceData}
-              layout="vertical"
-              margin={isMobile 
-                ? { top: 5, right: 10, left: 10, bottom: 5 }
-                : { top: 5, right: 20, left: 40, bottom: 5 }
-              }
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={COLORS.grayBorder}
-              />
-              <XAxis
-                type="number"
-                fontSize={chartConfig.fontSize}
-                stroke={COLORS.grayText}
-                tickFormatter={(val) => `${(val * 100).toFixed(0)}%`}
-              />
-              <YAxis
-                type="category"
-                dataKey="feature"
-                fontSize={chartConfig.fontSize}
-                stroke={COLORS.grayText}
-                width={isMobile ? 80 : 120}
-              />
-              <Tooltip
-                formatter={(value) => [
-                  `${(value * 100).toFixed(2)}%`,
-                  'Importance',
-                ]}
-                contentStyle={{ fontSize: chartConfig.fontSize }}
-              />
-              <Bar
-                dataKey="importance"
-                fill={COLORS.primary}
-                radius={[0, 4, 4, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="w-full h-full">
+            <ResponsiveContainer width="100%" height={chartConfig.chartHeight}>
+              <BarChart
+                data={featureImportanceData}
+                layout="vertical"
+                margin={
+                  isMobile
+                    ? { top: 5, right: 10, left: 10, bottom: 5 }
+                    : { top: 5, right: 20, left: 40, bottom: 5 }
+                }
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={COLORS.grayBorder}
+                />
+                <XAxis
+                  type="number"
+                  fontSize={chartConfig.fontSize}
+                  stroke={COLORS.grayText}
+                  tickFormatter={(val) => `${(val * 100).toFixed(0)}%`}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="feature"
+                  fontSize={chartConfig.fontSize}
+                  stroke={COLORS.grayText}
+                  width={isMobile ? 80 : 120}
+                />
+                <Tooltip
+                  formatter={(value) => [
+                    `${(value * 100).toFixed(2)}%`,
+                    'Importance',
+                  ]}
+                  contentStyle={{ fontSize: chartConfig.fontSize }}
+                />
+                <Bar
+                  dataKey="importance"
+                  fill={COLORS.primary}
+                  radius={[0, 4, 4, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
           <p className="text-sm" style={{ color: COLORS.grayText }}>
             Feature importance data is not available. Make sure your backend
             includes a <code>feature_importance</code> field in the response
             from <code>/api/analytics/dashboard</code> (for example, as an
             array of objects like
-            {" [{ feature: 'transaction_amount', importance: 0.35 }, ... ] "}
+            {' [{ feature: "transaction_amount", importance: 0.35 }, ... ] '}
             or a mapping of feature name to importance).
           </p>
         )}
       </div>
 
-      {/* Transaction Activity Heatmap section*/}
+      {/* Transaction Activity Heatmap section */}
       <div
         className="rounded-xl shadow-sm border p-4 md:p-6"
         style={{
@@ -585,41 +596,44 @@ const AnalyticsView = ({ data }) => {
             >
               Hourly Distribution
             </h4>
-            <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
-              <BarChart
-                data={activityData.hourly}
-                margin={isMobile 
-                  ? { top: 5, right: 5, left: -10, bottom: 5 }
-                  : { top: 5, right: 0, left: 0, bottom: 5 }
-                }
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={COLORS.grayBorder}
-                />
-                <XAxis
-                  dataKey="name"
-                  fontSize={chartConfig.fontSize}
-                  stroke={COLORS.grayText}
-                  angle={isMobile ? -45 : 0}
-                  textAnchor={isMobile ? 'end' : 'middle'}
-                  height={isMobile ? 50 : 30}
-                />
-                <YAxis 
-                  fontSize={chartConfig.fontSize} 
-                  stroke={COLORS.grayText} 
-                />
-                <Tooltip 
-                  formatter={(value) => formatCountTooltip(value)}
-                  contentStyle={{ fontSize: chartConfig.fontSize }}
-                />
-                <Bar
-                  dataKey="transactions"
-                  fill={COLORS.warning}
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="w-full h-full">
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
+                <BarChart
+                  data={activityData.hourly}
+                  margin={
+                    isMobile
+                      ? { top: 5, right: 5, left: -10, bottom: 5 }
+                      : { top: 5, right: 0, left: 0, bottom: 5 }
+                  }
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={COLORS.grayBorder}
+                  />
+                  <XAxis
+                    dataKey="name"
+                    fontSize={chartConfig.fontSize}
+                    stroke={COLORS.grayText}
+                    angle={isMobile ? -45 : 0}
+                    textAnchor={isMobile ? 'end' : 'middle'}
+                    height={isMobile ? 50 : 30}
+                  />
+                  <YAxis
+                    fontSize={chartConfig.fontSize}
+                    stroke={COLORS.grayText}
+                  />
+                  <Tooltip
+                    formatter={(value) => formatCountTooltip(value)}
+                    contentStyle={{ fontSize: chartConfig.fontSize }}
+                  />
+                  <Bar
+                    dataKey="transactions"
+                    fill={COLORS.warning}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           {/* Daily Activity */}
@@ -630,38 +644,41 @@ const AnalyticsView = ({ data }) => {
             >
               Daily Activity
             </h4>
-            <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
-              <BarChart
-                data={activityData.daily}
-                margin={isMobile 
-                  ? { top: 5, right: 5, left: -10, bottom: 5 }
-                  : { top: 5, right: 0, left: 0, bottom: 5 }
-                }
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={COLORS.grayBorder}
-                />
-                <XAxis
-                  dataKey="name"
-                  fontSize={chartConfig.fontSize}
-                  stroke={COLORS.grayText}
-                />
-                <YAxis 
-                  fontSize={chartConfig.fontSize} 
-                  stroke={COLORS.grayText} 
-                />
-                <Tooltip 
-                  formatter={(value) => formatCountTooltip(value)}
-                  contentStyle={{ fontSize: chartConfig.fontSize }}
-                />
-                <Bar
-                  dataKey="transactions"
-                  fill={COLORS.success}
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="w-full h-full">
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
+                <BarChart
+                  data={activityData.daily}
+                  margin={
+                    isMobile
+                      ? { top: 5, right: 5, left: -10, bottom: 5 }
+                      : { top: 5, right: 0, left: 0, bottom: 5 }
+                  }
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={COLORS.grayBorder}
+                  />
+                  <XAxis
+                    dataKey="name"
+                    fontSize={chartConfig.fontSize}
+                    stroke={COLORS.grayText}
+                  />
+                  <YAxis
+                    fontSize={chartConfig.fontSize}
+                    stroke={COLORS.grayText}
+                  />
+                  <Tooltip
+                    formatter={(value) => formatCountTooltip(value)}
+                    contentStyle={{ fontSize: chartConfig.fontSize }}
+                  />
+                  <Bar
+                    dataKey="transactions"
+                    fill={COLORS.success}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

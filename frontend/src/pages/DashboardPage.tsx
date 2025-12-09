@@ -27,6 +27,7 @@ export const DashboardPage = () => {
 
   useEffect(() => {
     loadTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const loadTransactions = async () => {
@@ -72,16 +73,18 @@ export const DashboardPage = () => {
   const handleExport = () => {
     const csv = [
       ['Transaction ID', 'Timestamp', 'Channel', 'Amount', 'Status', 'Risk Score', 'Account ID', 'Location'].join(','),
-      ...transactions.map(t => [
-        t.transaction_id,
-        t.timestamp,
-        t.channel,
-        t.amount,
-        t.status,
-        t.risk_score,
-        t.account_id,
-        t.location,
-      ].join(','))
+      ...transactions.map(t =>
+        [
+          t.transaction_id,
+          t.timestamp,
+          t.channel,
+          t.amount,
+          t.status,
+          t.risk_score,
+          t.account_id,
+          t.location,
+        ].join(',')
+      ),
     ].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -93,25 +96,40 @@ export const DashboardPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:space-y-8">
+      {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Transaction Surveillance Dashboard</h1>
-        <p className="text-slate-400">Real-time fraud detection and risk analysis</p>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+          Transaction Surveillance Dashboard
+        </h1>
+        <p className="text-slate-400 text-sm sm:text-base">
+          Real-time fraud detection and risk analysis
+        </p>
       </div>
 
+      {/* Top Cards */}
       <RiskAnalysisCard />
 
       <RecommendationsPanel />
 
+      {/* Transaction Management Card */}
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 md:p-6">
-        <div className={`flex items-center justify-between mb-4 md:mb-6 ${isMobile ? 'flex-col gap-4' : ''}`}>
-          <div className={isMobile ? 'w-full' : ''}>
-            <h2 className={`font-bold text-white mb-1 ${isMobile ? 'text-xl' : 'text-2xl'}`}>Transaction Management</h2>
+        {/* Card Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4 md:mb-6">
+          <div className="w-full md:w-auto">
+            <h2 className={`font-bold text-white mb-1 ${isMobile ? 'text-xl' : 'text-2xl'}`}>
+              Transaction Management
+            </h2>
             <p className="text-slate-400 text-sm">
               Showing {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <div className={`flex gap-2 md:gap-3 ${isMobile ? 'w-full' : ''}`}>
+
+          <div
+            className={`flex flex-wrap md:flex-nowrap gap-2 md:gap-3 ${
+              isMobile ? 'w-full' : ''
+            }`}
+          >
             <button
               onClick={loadTransactions}
               className={`flex items-center justify-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors min-h-[44px] ${
@@ -134,6 +152,7 @@ export const DashboardPage = () => {
           </div>
         </div>
 
+        {/* Filters + Table */}
         <div className="space-y-4">
           <TransactionFilters
             filters={filters}
@@ -141,17 +160,25 @@ export const DashboardPage = () => {
             onClearFilters={handleClearFilters}
           />
 
-          <TransactionTable
-            transactions={transactions}
-            loading={loading}
-            onViewDetails={setSelectedTransaction}
-            onFlagTransaction={(transaction) => {
-              alert(`Transaction ${transaction.transaction_id} has been flagged for investigation.`);
-            }}
-          />
+          {/* Make table scrollable horizontally on small screens */}
+          <div className="-mx-2 sm:mx-0 overflow-x-auto">
+            <div className="min-w-full inline-block align-middle">
+              <TransactionTable
+                transactions={transactions}
+                loading={loading}
+                onViewDetails={setSelectedTransaction}
+                onFlagTransaction={(transaction) => {
+                  alert(
+                    `Transaction ${transaction.transaction_id} has been flagged for investigation.`
+                  );
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Transaction Details Modal */}
       {selectedTransaction && (
         <TransactionDetailsModal
           transaction={selectedTransaction}

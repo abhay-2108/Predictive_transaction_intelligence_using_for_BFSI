@@ -171,25 +171,25 @@ const AlertConfiguration = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3 sm:items-center sm:gap-4">
               {showBackButton && (
                 <button
                   onClick={handleCancel}
-                  className="flex items-center text-gray-600 hover:text-gray-900"
+                  className="flex items-center text-gray-600 hover:text-gray-900 text-sm sm:text-base"
                 >
-                  <ArrowLeft className="h-5 w-5 mr-1" />
+                  <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
                   Back
                 </button>
               )}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   {getPageTitle()}
                 </h1>
-                <p className="text-gray-600 mt-1">
+                <p className="text-gray-600 mt-1 text-sm sm:text-base max-w-2xl">
                   {currentView === 'list' && 'Configure and manage fraud detection alert rules'}
                   {currentView === 'create' && 'Create a new alert rule for fraud detection'}
                   {currentView === 'edit' && 'Modify an existing alert rule'}
@@ -200,19 +200,21 @@ const AlertConfiguration = () => {
 
             {/* Navigation Tabs */}
             {currentView === 'list' && (
-              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-                <button
-                  onClick={() => setCurrentView('list')}
-                  className="px-4 py-2 text-sm font-medium rounded-md bg-white text-gray-900 shadow-sm"
-                >
-                  Rules
-                </button>
-                <button
-                  onClick={() => setCurrentView('manage')}
-                  className="px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900"
-                >
-                  Alerts
-                </button>
+              <div className="mt-2 md:mt-0">
+                <div className="inline-flex flex-wrap sm:flex-nowrap gap-2 bg-gray-100 p-1 rounded-lg">
+                  <button
+                    onClick={() => setCurrentView('list')}
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md bg-white text-gray-900 shadow-sm"
+                  >
+                    Rules
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('manage')}
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md text-gray-600 hover:text-gray-900"
+                  >
+                    Alerts
+                  </button>
+                </div>
               </div>
             )}
           </div>

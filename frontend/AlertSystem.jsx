@@ -85,7 +85,7 @@ export default function AlertSystem({ transactions = [] }) {
     return (
       <button
         onClick={() => setShowAlerts(true)}
-        className="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center relative"
       >
         <Bell className="w-5 h-5" />
         {alerts.length > 0 && (
@@ -98,7 +98,7 @@ export default function AlertSystem({ transactions = [] }) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 w-96 space-y-2 z-50">
+    <div className="fixed inset-x-4 bottom-4 sm:inset-x-auto sm:right-4 sm:left-auto w-auto sm:w-96 max-w-full space-y-2 z-50">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-medium text-gray-900">System Alerts</h3>
         <button
@@ -112,21 +112,21 @@ export default function AlertSystem({ transactions = [] }) {
       {alerts.map((alert) => (
         <div
           key={alert.id}
-          className={`border rounded-lg p-4 shadow-sm ${getAlertStyles(alert.type)}`}
+          className={`border rounded-lg p-3 sm:p-4 shadow-sm ${getAlertStyles(alert.type)}`}
         >
           <div className="flex items-start space-x-3">
             {getAlertIcon(alert.type)}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">{alert.title}</h4>
+              <div className="flex items-center justify-between gap-2">
+                <h4 className="text-sm font-medium truncate">{alert.title}</h4>
                 <button
                   onClick={() => dismissAlert(alert.id)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex-shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-sm mt-1">{alert.message}</p>
+              <p className="text-sm mt-1 break-words">{alert.message}</p>
               <p className="text-xs mt-2 opacity-75">
                 {alert.timestamp.toLocaleTimeString()}
               </p>
