@@ -163,7 +163,7 @@ const SettingsPanel = ({ isOpen, onClose }) => {
               <div className="space-y-4 sm:space-y-5">
                 
                 {/* Notifications */}
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                   <div className="flex-1 min-w-0">
                     <label className="text-white font-medium text-sm sm:text-base block">{t('settings.preferences.notifications')}</label>
                     <p className="text-xs sm:text-sm text-gray-400 mt-0.5">{t('settings.preferences.notificationsDesc')}</p>
@@ -186,7 +186,7 @@ const SettingsPanel = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Auto Refresh */}
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                   <div className="flex-1 min-w-0">
                     <label className="text-white font-medium text-sm sm:text-base block">{t('settings.preferences.autoRefresh')}</label>
                     <p className="text-xs sm:text-sm text-gray-400 mt-0.5">{t('settings.preferences.autoRefreshDesc')}</p>
@@ -232,7 +232,7 @@ const SettingsPanel = ({ isOpen, onClose }) => {
                 )}
 
                 {/* Compact Mode */}
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                   <div className="flex-1 min-w-0">
                     <label className="text-white font-medium text-sm sm:text-base block">{t('settings.preferences.compactMode')}</label>
                     <p className="text-xs sm:text-sm text-gray-400 mt-0.5">{t('settings.preferences.compactModeDesc')}</p>

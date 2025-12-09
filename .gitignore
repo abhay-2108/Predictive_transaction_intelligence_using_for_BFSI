@@ -83,5 +83,7 @@ lerna-debug.log*
 frontend/dist/
 frontend/build/
 
-# Backend Data (Optional - comment out if you want to commit data)
-# backend/data/
+# .env
+.env
+.env.local
+.env.* 
